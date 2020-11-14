@@ -1,8 +1,7 @@
 import os
+import codecs
 
 from setuptools import setup, find_packages
-
-import pg_simple
 
 try:
     with open(os.path.abspath('./README.rst')) as stream:
@@ -10,9 +9,22 @@ try:
 except:
     long_description = 'pg_simple is a simple wrapper for Python psycopg2 with connection pooling'
 
+def read(rel_path):
+    here = os.path.abspath(os.path.dirname(__file__))
+    with codecs.open(os.path.join(here, rel_path), 'r') as fp:
+        return fp.read()
+
+def get_version(rel_path):
+    for line in read(rel_path).splitlines():
+        if line.startswith('__version__'):
+            delim = '"' if '"' in line else "'"
+            return line.split(delim)[1]
+    else:
+        raise RuntimeError("Unable to find version string.")
+    
 setup(
-    name=pg_simple.__name__,
-    version=pg_simple.VERSION,
+    name="pg_simple",
+    version=get_version("pg_simple/__init__.py"),
     packages=find_packages(),
     install_requires=['psycopg2-binary'],
     classifiers=['Topic :: Database',
